@@ -21,7 +21,7 @@ const app = express();
 
 // 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
-app.use(helmet());
+//app.use(helmet());
 app.use(cors());
 
 app.use((req, res, next) => {
