@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxtjs/google-fonts",
     "nuxt-icon",
-    'nuxt-headlessui',
+    "nuxt-headlessui",
     "@nuxt/image",
   ],
   tailwindcss: {
@@ -21,4 +21,4 @@ export default defineNuxtConfig({
   pinia: {
     autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
   },
-})
+});

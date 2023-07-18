@@ -10,12 +10,21 @@ router.use(authController.protect);
 router
   .route("/")
   .get(bookController.getAllBooks)
-  .post(authController.restrictTo("Librarian", "Admin"), bookController.createBook);
+  .post(
+    authController.restrictTo("Librarian", "Admin"),
+    bookController.createBook
+  );
 
 router
   .route("/:id")
   .get(bookController.getBook)
-  .patch(authController.restrictTo("Librarian", "Admin"), bookController.updateBook)
-  .delete(authController.restrictTo("Librarian", "Admin"), bookController.deleteBook);
+  .patch(
+    authController.restrictTo("Librarian", "Admin"),
+    bookController.updateBook
+  )
+  .delete(
+    authController.restrictTo("Librarian", "Admin"),
+    bookController.deleteBook
+  );
 
 module.exports = router;

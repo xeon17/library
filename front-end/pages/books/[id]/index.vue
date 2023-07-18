@@ -22,19 +22,19 @@ const cancelVisible = ref(false);
 const route = useRoute();
 
 const { data: book, error } = await useFetch(
-    "http://localhost:8080/api/v1/books/" + route.params.id,
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + userStore.token,
-      },
-    }
+  "http://localhost:8080/api/v1/books/" + route.params.id,
+  {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + userStore.token,
+    },
+  }
 );
 </script>
 
 <template>
   <div
-      class="flex flex-col max-w-3xl justify-around gap-y-4 rounded-md bg-white px-4 py-6 shadow-default"
+    class="flex max-w-3xl flex-col justify-around gap-y-4 rounded-md bg-white px-4 py-6 shadow-default"
   >
     <div class="flex justify-between border-b py-2">
       <div>
@@ -45,9 +45,7 @@ const { data: book, error } = await useFetch(
       </div>
     </div>
     <div class="grid grid-cols-2 gap-2">
-      <div
-          class="w-17 p-2"
-      >
+      <div class="w-17 p-2">
         <p class="text-gray-500 opacity-75">Title</p>
         <p>
           {{ book.title }}
@@ -88,9 +86,17 @@ const { data: book, error } = await useFetch(
         <p>{{ formatDate(book.releaseDate) }}</p>
       </div>
     </div>
-    <div class="flex flex-col gap-y-2 max-w-lg">
+    <div class="flex max-w-lg flex-col gap-y-2">
       <label for="summary" class="text-gray-500 opacity-75">Summary:</label>
-      <textarea id="summary" class="py-2 px-3 border-gray-200 w-full rounded-lg text-sm" readonly disabled rows="6" cols="50">{{ book.summary }}</textarea>
+      <textarea
+        id="summary"
+        class="w-full rounded-lg border-gray-200 px-3 py-2 text-sm"
+        readonly
+        disabled
+        rows="6"
+        cols="50"
+        >{{ book.summary }}</textarea
+      >
     </div>
   </div>
 </template>

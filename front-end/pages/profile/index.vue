@@ -13,12 +13,11 @@ useSeoMeta({
   ogImage: "/logo.png",
 });
 
-import {useUserStore} from "~/stores/user";
-import {storeToRefs} from "pinia";
+import { useUserStore } from "~/stores/user";
+import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
 const { userId } = storeToRefs(userStore);
-
 </script>
 
 <template>

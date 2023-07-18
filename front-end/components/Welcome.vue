@@ -23,7 +23,9 @@ const { data: user } = await useFetch(apiUrl, {
       <p class="text-2xl">Welcome back, {{ user.firstName }}</p>
       <nuxt-img alt="Wave icon" class="ml-2 w-5" src="/wave.png" />
     </div>
-    <p class="text-sm text-gray-500">Discover, Imagine, Explore: Where Words Come Alive.</p>
+    <p class="text-sm text-gray-500">
+      Discover, Imagine, Explore: Where Words Come Alive.
+    </p>
   </div>
 </template>
 

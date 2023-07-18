@@ -16,14 +16,17 @@ router.patch("/updateMyPassword", authController.updatePassword);
 router.get("/me", userController.getMe, userController.getUser);
 router.patch(
   "/updateMe",
-    userController.uploadUserPhoto,
+  userController.uploadUserPhoto,
   userController.updateMe
 );
 
 router
   .route("/")
   .get(userController.getAllUsers)
-  .post(authController.restrictTo("Librarian", "Admin"), userController.createUser);
+  .post(
+    authController.restrictTo("Librarian", "Admin"),
+    userController.createUser
+  );
 
 router
   .route("/:id")

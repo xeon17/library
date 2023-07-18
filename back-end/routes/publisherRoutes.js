@@ -8,8 +8,11 @@ const router = express.Router();
 router.use(authController.protect);
 
 router
-    .route("/")
-    .get(publisherController.getAllPublishers)
-    .post(authController.restrictTo("Admin"), publisherController.createPublisher);
+  .route("/")
+  .get(publisherController.getAllPublishers)
+  .post(
+    authController.restrictTo("Admin"),
+    publisherController.createPublisher
+  );
 
 module.exports = router;

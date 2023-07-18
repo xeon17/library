@@ -21,7 +21,6 @@ export const useUserStore = defineStore(
       country: string;
       role: string;
     }) => {
-
       // Send a POST request to the createUser endpoint with user information
       const response = await fetch(BASE_URL, {
         method: "POST",
@@ -43,7 +42,6 @@ export const useUserStore = defineStore(
         throw new Error("Email address is already taken");
       }
     };
-
 
     // Function for user login
     const login = async (payload: { email: string; password: string }) => {

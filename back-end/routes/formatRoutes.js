@@ -8,8 +8,8 @@ const router = express.Router();
 router.use(authController.protect);
 
 router
-    .route("/")
-    .get(formatController.getAllFormats)
-    .post(authController.restrictTo("Admin"), formatController.createFormat);
+  .route("/")
+  .get(formatController.getAllFormats)
+  .post(authController.restrictTo("Admin"), formatController.createFormat);
 
 module.exports = router;

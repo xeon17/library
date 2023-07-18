@@ -5,14 +5,14 @@
     <teleport to="body">
       <div class="absolute right-0 top-0 mr-2 mt-2">
         <notification
-            v-for="alert in alerts"
-            :key="alert.id"
-            :alert-type="alert.type"
-            :title="alert.title"
-            :description="alert.description"
-            :visible="alert.visible"
-            @close="hideAlert(alert)"
-            class="mb-4"
+          v-for="alert in alerts"
+          :key="alert.id"
+          :alert-type="alert.type"
+          :title="alert.title"
+          :description="alert.description"
+          :visible="alert.visible"
+          @close="hideAlert(alert)"
+          class="mb-4"
         ></notification>
       </div>
     </teleport>
@@ -117,20 +117,20 @@
           </span>
         </label>
         <label
-            for="username"
-            class="relative block overflow-hidden rounded-md border border-gray-200 px-3 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
+          for="username"
+          class="relative block overflow-hidden rounded-md border border-gray-200 px-3 pt-3 shadow-sm focus-within:border-blue-600 focus-within:ring-1 focus-within:ring-blue-600"
         >
           <input
-              v-model.trim="username"
-              required
-              type="text"
-              id="username"
-              placeholder="Username"
-              class="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
+            v-model.trim="username"
+            required
+            type="text"
+            id="username"
+            placeholder="Username"
+            class="peer h-8 w-full border-none bg-transparent p-0 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 sm:text-sm"
           />
 
           <span
-              class="absolute start-3 top-3 -translate-y-1/2 text-xs text-gray-700 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
+            class="absolute start-3 top-3 -translate-y-1/2 text-xs text-gray-700 transition-all duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-3 peer-focus:text-xs"
           >
             Username
           </span>
@@ -168,7 +168,7 @@ const userStore = useUserStore();
 const alerts = reactive([]);
 
 async function submitRegistration() {
-  if(password.value !== confirmPassword.value) {
+  if (password.value !== confirmPassword.value) {
     return showAlert("error", "Something went wrong", "Passwords do not match");
   }
   try {

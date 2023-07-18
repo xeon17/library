@@ -8,7 +8,7 @@ const currentPath = computed(() => route.path);
 
 <template>
   <div class="flex h-screen flex-col bg-white pt-4">
-    <div class="flex mx-4 h-10 w-32 items-center">
+    <div class="mx-4 flex h-10 w-32 items-center">
       <nuxt-link to="/">
         <nuxt-img src="/logo.png" alt="Logo" />
       </nuxt-link>

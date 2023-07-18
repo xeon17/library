@@ -8,8 +8,8 @@ const router = express.Router();
 router.use(authController.protect);
 
 router
-    .route("/")
-    .get(languageController.getAllLanguage)
-    .post(authController.restrictTo("Admin"), languageController.createLanguage);
+  .route("/")
+  .get(languageController.getAllLanguage)
+  .post(authController.restrictTo("Admin"), languageController.createLanguage);
 
 module.exports = router;

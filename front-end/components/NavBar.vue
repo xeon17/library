@@ -20,13 +20,14 @@ const { data: user } = await useFetch(apiUrl, {
   <div class="flex items-center justify-end py-4">
     <div class="flex items-center gap-1">
       <div class="flex items-center pl-2">
-        <nuxt-link to="/profile" class="flex items-center gap-1 text-sm text-blue-500">
+        <nuxt-link
+          to="/profile"
+          class="flex items-center gap-1 text-sm text-blue-500"
+        >
           <Icon class="h-5 w-5" name="heroicons:user" />
 
           <div class="flex flex-row items-center gap-0.5">
-            <p class="font-medium">
-              {{ user.firstName }} {{ user.lastName }}
-            </p>
+            <p class="font-medium">{{ user.firstName }} {{ user.lastName }}</p>
             <Icon class="h-5 w-5 text-gray-500" name="heroicons:chevron-down" />
           </div>
         </nuxt-link>

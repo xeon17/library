@@ -5,14 +5,14 @@
     <teleport to="body">
       <div class="absolute right-0 top-0 mr-2 mt-2">
         <notification
-            v-for="alert in alerts"
-            :key="alert.id"
-            :alert-type="alert.type"
-            :title="alert.title"
-            :description="alert.description"
-            :visible="alert.visible"
-            @close="hideAlert(alert)"
-            class="mb-4"
+          v-for="alert in alerts"
+          :key="alert.id"
+          :alert-type="alert.type"
+          :title="alert.title"
+          :description="alert.description"
+          :visible="alert.visible"
+          @close="hideAlert(alert)"
+          class="mb-4"
         ></notification>
       </div>
     </teleport>
@@ -36,7 +36,10 @@
         </label>
         <label for="password">
           <p class="pb-2 font-medium text-slate-700">Password</p>
-          <Icon class="absolute my-3 ml-3 h-5 w-5" name="heroicons:lock-closed" />
+          <Icon
+            class="absolute my-3 ml-3 h-5 w-5"
+            name="heroicons:lock-closed"
+          />
           <input
             v-model.trim="password"
             id="password"
