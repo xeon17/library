@@ -19,21 +19,19 @@ const publisherRouter = require("./routes/publisherRoutes");
 
 const app = express();
 
-// 1) GLOBAL MIDDLEWARES
 // Set security HTTP headers
-//app.use(helmet());
+app.use(
+    helmet.contentSecurityPolicy({
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "http://localhost:8080"],
+      },
+    })
+);
+
+// Set up CORS
 app.use(cors());
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+app.options('*', cors());
 
 // Body parser, reading data from body into req.body
 app.use(express.json());
