@@ -63,7 +63,8 @@ model Publisher {
 model Author {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   name  String @unique
-  books Book[]
+  bookIDs String[] @db.ObjectId
+  books   Book[]   @relation(fields: [bookIDs], references: [id])
 }
 
 model Genre {
@@ -92,8 +93,8 @@ model Book {
   category    Category  @relation(fields: [categoryId], references: [id])
   categoryId  String    @db.ObjectId
   isbn        String    @unique
-  author      Author    @relation(fields: [authorId], references: [id])
-  authorId    String    @db.ObjectId
+  authorIDs String[]   @db.ObjectId
+  authors  Author[] @relation(fields: [authorIDs], references: [id])
   letter      Letter    @relation(fields: [letterId], references: [id])
   letterId    String    @db.ObjectId
   publisher   Publisher @relation(fields: [publisherId], references: [id])

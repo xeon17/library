@@ -10,6 +10,10 @@ export default defineNuxtConfig({
     "nuxt-headlessui",
     "@nuxt/image",
   ],
+  // Optionally change the default prefix.
+  headlessui: {
+    prefix: 'Headless'
+  },
   tailwindcss: {
     configPath: "tailwind.config",
   },

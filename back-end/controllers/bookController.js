@@ -19,7 +19,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
     where: nameFilter,
     include: {
       category: true,
-      author: true,
+      authors: true,
       letter: true,
       publisher: true,
       genre: true,
@@ -36,7 +36,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
 });
 
 exports.createBook = catchAsync(async (req, res, next) => {
-  const { isbn, title } = req.body;
+  const { isbn, title, authors } = req.body;
 
   const existingBook = await prisma.book.findFirst({
     where: {
@@ -67,10 +67,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
           id: req.body.publisher,
         },
       },
-      author: {
-        connect: {
-          id: req.body.author,
-        },
+      authors: {
+        connect: authors.map((author) => ({ id: author.id })),
       },
       letter: {
         connect: {
@@ -109,7 +107,7 @@ exports.getBook = catchAsync(async (req, res, next) => {
     },
     include: {
       category: true,
-      author: true,
+      authors: true,
       letter: true,
       publisher: true,
       genre: true,
@@ -131,8 +129,8 @@ exports.updateBook = catchAsync(async (req, res, next) => {
   const existingBook = await prisma.book.findFirst({
     where: {
       OR: [
-        { title: { equals: title }, NOT: { id: bookId } },
-        { isbn: { equals: isbn }, NOT: { id: bookId } },
+        { title: { equals: title, mode: "insensitive" }, NOT: { id: bookId } },
+        { isbn: { equals: isbn, mode: "insensitive" }, NOT: { id: bookId } },
       ],
     },
   });
@@ -186,10 +184,8 @@ exports.updateBook = catchAsync(async (req, res, next) => {
           id: req.body.format,
         },
       },
-      author: {
-        connect: {
-          id: req.body.author,
-        },
+      authors: {
+        set: req.body.authors.map((author) => ({ id: author.id })),
       },
     },
   });

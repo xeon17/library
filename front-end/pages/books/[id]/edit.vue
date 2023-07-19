@@ -22,7 +22,7 @@ const title = ref();
 const category = ref();
 const publisher = ref();
 const genre = ref();
-const author = ref();
+const author = ref([]);
 const language = ref();
 const letter = ref();
 const format = ref();
@@ -49,11 +49,9 @@ if (book) {
 
   const parsedDate = new Date(book.value.releaseDate);
   releaseDate.value = parsedDate.toISOString().split("T")[0];
-  console.log(book.value.category);
   category.value = book.value.category.id;
   publisher.value = book.value.publisher.id;
   genre.value = book.value.genre.id;
-  author.value = book.value.author.id;
   language.value = book.value.language.id;
   letter.value = book.value.letter.id;
   format.value = book.value.format.id;
@@ -150,7 +148,7 @@ const submitForm = async () => {
           pageCount: pageCount.value,
           isbn: isbn.value,
           releaseDate: new Date(releaseDate.value),
-          author: author.value,
+          authors: author.value,
         },
       }
     );
@@ -322,26 +320,66 @@ function generateRandomId() {
               for="author"
               class="mt-2.5 inline-block text-sm font-medium text-gray-500"
             >
-              Author
+              Authors
             </label>
           </div>
 
           <div class="sm:col-span-9">
-            <select
-              v-model="author"
-              id="author"
-              required
-              class="block w-full rounded-lg border-gray-200 px-3 py-2 pr-11 text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            >
-              <option selected>Select an author</option>
-              <option
-                v-for="author in authors.documents"
-                :key="author.id"
-                :value="author.id"
-              >
-                {{ author.name }}
-              </option>
-            </select>
+            <HeadlessListbox v-model="author" multiple>
+              <div class="relative mt-1">
+                <HeadlessListboxButton
+                    class="relative w-full cursor-default border border-gray-200 px-3 rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                >
+                  <span class="block truncate"> {{ author.map((author) => author.name).join(', ') }}</span>
+                  <span
+                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                  >
+                                  <Icon
+                                      class="h-5 w-5 text-gray-400"
+                                      name = "heroicons:chevron-up-down"
+                                  />
+            </span>
+                </HeadlessListboxButton>
+
+                <transition
+                    leave-active-class="transition duration-100 ease-in"
+                    leave-from-class="opacity-100"
+                    leave-to-class="opacity-0"
+                >
+                  <HeadlessListboxOptions
+                      class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                  >
+                    <HeadlessListboxOption
+                        v-for="author in authors.documents"
+                        v-slot="{ active, selected }"
+                        :key="author.id"
+                        :value="author"
+                        as="template"
+                    >
+                      <li
+                          :class="[
+                    active ? 'bg-slate-400 text-white' : 'text-slate-500',
+                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                  ]"
+                      >
+                  <span
+                      :class="[
+                      selected ? 'font-medium' : 'font-normal',
+                      'block truncate',
+                    ]"
+                  >{{ author.name }}</span>
+                        <span
+                            v-if="selected"
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-500"
+                        >
+                        <Icon class="h-5 w-5" name="heroicons:check" />
+                  </span>
+                      </li>
+                    </HeadlessListboxOption>
+                  </HeadlessListboxOptions>
+                </transition>
+              </div>
+            </HeadlessListbox>
           </div>
 
           <div class="sm:col-span-3">

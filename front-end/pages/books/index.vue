@@ -202,7 +202,7 @@ const attemptRemoveBook = async () => {
                     {{ book.category.name }}
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-800">
-                    {{ book.author.name }}
+                    {{ book.authors.map((author) => author.name).join(', ') }}
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-800">
                     {{ book.genre.name }}
