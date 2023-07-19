@@ -87,7 +87,7 @@ const { data: book, error } = await useFetch(
       </div>
       <div class="w-17 p-2">
         <p class="text-gray-500 opacity-75">Release date:</p>
-        <p>{{ book.authors.map((author) => author.name).join(', ') }}</p>
+        <p>{{ book.authors.map((author) => author.name).join(", ") }}</p>
       </div>
     </div>
     <div class="flex max-w-lg flex-col gap-y-2">

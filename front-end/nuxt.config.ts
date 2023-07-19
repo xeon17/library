@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   ],
   // Optionally change the default prefix.
   headlessui: {
-    prefix: 'Headless'
+    prefix: "Headless",
   },
   tailwindcss: {
     configPath: "tailwind.config",

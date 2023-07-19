@@ -21,17 +21,17 @@ const app = express();
 
 // Set security HTTP headers
 app.use(
-    helmet.contentSecurityPolicy({
-      directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        "img-src": ["'self'", "http://localhost:8080"],
-      },
-    })
+  helmet.contentSecurityPolicy({
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "img-src": ["'self'", "http://localhost:8080"],
+    },
+  })
 );
 
 // Set up CORS
 app.use(cors());
-app.options('*', cors());
+app.options("*", cors());
 
 // Body parser, reading data from body into req.body
 app.use(express.json());

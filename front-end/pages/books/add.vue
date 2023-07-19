@@ -16,7 +16,6 @@ useSeoMeta({
 import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
 
-
 const alerts = reactive([]);
 const title = ref();
 const category = ref();
@@ -26,11 +25,10 @@ const language = ref();
 const letter = ref();
 const format = ref();
 const pageCount = ref();
-const author = ref([])
+const author = ref([]);
 const isbn = ref();
 const releaseDate = ref();
 const summary = ref();
-
 
 const { data: categories } = await useFetch(
   "http://localhost:8080/api/v1/categories/",
@@ -101,7 +99,6 @@ const { data: authors } = await useFetch(
     },
   }
 );
-
 
 const submitForm = async () => {
   try {
@@ -297,52 +294,55 @@ function generateRandomId() {
             <HeadlessListbox v-model="author" multiple>
               <div class="relative mt-1">
                 <HeadlessListboxButton
-                    class="relative w-full cursor-default border border-gray-200 px-3 rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                    class="relative w-full cursor-default rounded-lg border border-gray-200 bg-white px-3 py-4 text-sm text-left shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                 >
-                  <span class="block truncate"> {{ author.map((author) => author.name).join(', ') }}</span>
-                  <span
-                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                  <span class="block truncate">
+                    {{ author.map((author) => author.name).join(", ") }}</span
                   >
-                                  <Icon
-                                      class="h-5 w-5 text-gray-400"
-                                      name = "heroicons:chevron-up-down"
-                                  />
-            </span>
+                  <span
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+                  >
+                    <Icon
+                      class="h-5 w-5 text-gray-400"
+                      name="heroicons:chevron-up-down"
+                    />
+                  </span>
                 </HeadlessListboxButton>
 
                 <transition
-                    leave-active-class="transition duration-100 ease-in"
-                    leave-from-class="opacity-100"
-                    leave-to-class="opacity-0"
+                  leave-active-class="transition duration-100 ease-in"
+                  leave-from-class="opacity-100"
+                  leave-to-class="opacity-0"
                 >
                   <HeadlessListboxOptions
-                      class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                    class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
                   >
                     <HeadlessListboxOption
-                        v-for="author in authors.documents"
-                        v-slot="{ active, selected }"
-                        :key="author.id"
-                        :value="author"
-                        as="template"
+                      v-for="author in authors.documents"
+                      v-slot="{ active, selected }"
+                      :key="author.id"
+                      :value="author"
+                      as="template"
                     >
                       <li
-                          :class="[
-                    active ? 'bg-slate-400 text-white' : 'text-slate-500',
-                    'relative cursor-default select-none py-2 pl-10 pr-4',
-                  ]"
+                        :class="[
+                          active ? 'bg-slate-400 text-white' : 'text-slate-500',
+                          'relative cursor-default select-none py-2 pl-10 pr-4',
+                        ]"
                       >
-                  <span
-                      :class="[
-                      selected ? 'font-medium' : 'font-normal',
-                      'block truncate',
-                    ]"
-                  >{{ author.name }}</span>
                         <span
-                            v-if="selected"
-                            class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-500"
+                          :class="[
+                            selected ? 'font-medium' : 'font-normal',
+                            'block truncate',
+                          ]"
+                          >{{ author.name }}</span
                         >
-                        <Icon class="h-5 w-5" name="heroicons:check" />
-                  </span>
+                        <span
+                          v-if="selected"
+                          class="absolute inset-y-0 left-0 flex items-center pl-3 text-blue-500"
+                        >
+                          <Icon class="h-5 w-5" name="heroicons:check" />
+                        </span>
                       </li>
                     </HeadlessListboxOption>
                   </HeadlessListboxOptions>

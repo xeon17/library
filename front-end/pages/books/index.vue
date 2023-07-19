@@ -24,18 +24,17 @@ useSeoMeta({
   ogImage: "/logo.png",
 });
 
-
-const fetchData = async() => {
+const fetchData = async () => {
   const { data } = await useFetch(apiUrl, {
     method: "GET",
     headers: {
       Authorization: "Bearer " + userStore.token,
     },
   });
-  if(data){
+  if (data) {
     books.value = data.value;
   }
-}
+};
 
 await fetchData();
 
@@ -202,7 +201,7 @@ const attemptRemoveBook = async () => {
                     {{ book.category.name }}
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-800">
-                    {{ book.authors.map((author) => author.name).join(', ') }}
+                    {{ book.authors.map((author) => author.name).join(", ") }}
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-800">
                     {{ book.genre.name }}
