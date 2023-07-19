@@ -8,8 +8,7 @@ const apiUrl = "http://localhost:8080/api/v1/books/";
 const removeVisible = ref(false);
 const currentlySelectedBook = ref();
 const search = ref();
-const books = ref([]);
-let refreshBooks;
+let books = ref([]);
 
 definePageMeta({
   middleware: "auth",
@@ -25,20 +24,20 @@ useSeoMeta({
   ogImage: "/logo.png",
 });
 
-const { data, error, refresh } = await useFetch(apiUrl, {
-  method: "GET",
-  headers: {
-    Authorization: "Bearer " + userStore.token,
-  },
-});
 
-if (refresh) {
-  refreshBooks = refresh;
+const fetchData = async() => {
+  const { data } = await useFetch(apiUrl, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + userStore.token,
+    },
+  });
+  if(data){
+    books.value = data.value;
+  }
 }
 
-if (data) {
-  books.value = data.value;
-}
+await fetchData();
 
 const toggleRemoveMenu = (value, book) => {
   removeVisible.value = value;
@@ -72,10 +71,9 @@ const attemptRemoveBook = async () => {
       },
     }
   );
-  console.log(response.value);
   if (response.value) {
     toggleRemoveMenu(false);
-    await refreshBooks();
+    await fetchData();
   }
 };
 </script>
