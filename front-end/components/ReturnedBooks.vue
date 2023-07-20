@@ -1,15 +1,14 @@
 <script setup>
 import { useUserStore } from "~/stores/user";
-import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
 const { userId } = storeToRefs(userStore);
 const array = ref([]);
 const route = useRoute();
-const apiUrl = "http://localhost:8080/api/v1/books";
+const { apiUrl } = useRuntimeConfig().public;
 
 /*
-const { data: books, error } = await useFetch(apiUrl, {
+const { data: books, error } = await useFetch(apiUrl + '/books', {
   method: "GET",
   headers: {
     Authorization: "Bearer " + userStore.token,

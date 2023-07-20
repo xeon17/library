@@ -23,6 +23,11 @@ export default defineNuxtConfig({
     },
   },
   pinia: {
-    autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
+    autoImports: ["defineStore", "storeToRefs", ["defineStore", "definePiniaStore"]],
+  },
+  runtimeConfig: {
+    public: {
+      apiUrl: 'http://localhost:8080/api/v1'
+    }
   },
 });

@@ -1,6 +1,5 @@
 <script setup>
 import { useUserStore } from "~/stores/user";
-import { storeToRefs } from "pinia";
 
 definePageMeta({
   middleware: "auth",
@@ -16,13 +15,13 @@ useHead({
   ],
 });
 
+const { apiUrl } = useRuntimeConfig().public;
 const userStore = useUserStore();
 const { userId, role } = storeToRefs(userStore);
-const cancelVisible = ref(false);
 const route = useRoute();
 
 const { data: book, error } = await useFetch(
-  "http://localhost:8080/api/v1/books/" + route.params.id,
+  apiUrl + '/books/' + route.params.id,
   {
     method: "GET",
     headers: {

@@ -14,7 +14,6 @@ useSeoMeta({
 });
 
 import { useUserStore } from "~/stores/user";
-import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
 const { userId } = storeToRefs(userStore);

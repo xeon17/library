@@ -1,9 +1,8 @@
 <script setup>
 import { useUserStore } from "~/stores/user";
-import { storeToRefs } from "pinia";
 const userStore = useUserStore();
 const { userId } = storeToRefs(userStore);
-const apiUrl = "http://localhost:8080/api/v1/users/";
+const { apiUrl } = useRuntimeConfig().public;
 
 const props = defineProps({
   id: {
@@ -12,7 +11,7 @@ const props = defineProps({
   },
 });
 
-const { data: user } = await useFetch(apiUrl + props.id, {
+const { data: user } = await useFetch(apiUrl + '/users/' + props.id, {
   method: "GET",
   headers: {
     Authorization: "Bearer " + userStore.token,

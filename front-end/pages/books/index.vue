@@ -1,10 +1,9 @@
 <script setup>
 import { useUserStore } from "~/stores/user";
-import { storeToRefs } from "pinia";
 const userStore = useUserStore();
 const { userId, role } = storeToRefs(userStore);
 
-const apiUrl = "http://localhost:8080/api/v1/books/";
+const { apiUrl } = useRuntimeConfig().public;
 const removeVisible = ref(false);
 const currentlySelectedBook = ref();
 const search = ref();
@@ -25,7 +24,7 @@ useSeoMeta({
 });
 
 const fetchData = async () => {
-  const { data } = await useFetch(apiUrl, {
+  const { data } = await useFetch(apiUrl + '/books/', {
     method: "GET",
     headers: {
       Authorization: "Bearer " + userStore.token,
@@ -62,7 +61,7 @@ const filterBooks = async () => {
 
 const attemptRemoveBook = async () => {
   const { data: response } = await useFetch(
-    apiUrl + currentlySelectedBook.value,
+    apiUrl + '/books/' + currentlySelectedBook.value,
     {
       method: "DELETE",
       headers: {

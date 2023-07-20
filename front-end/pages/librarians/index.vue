@@ -1,11 +1,10 @@
 <script setup>
 import { useUserStore } from "~/stores/user";
-import { storeToRefs } from "pinia";
 
 const userStore = useUserStore();
 const { userId, role } = storeToRefs(userStore);
 
-const apiUrl = "http://localhost:8080/api/v1/users";
+const { apiUrl } = useRuntimeConfig().public;
 const removeVisible = ref(false);
 const currentlySelectedLibrarian = ref();
 const search = ref();
@@ -25,7 +24,7 @@ useSeoMeta({
   ogImage: "/logo.png",
 });
 
-const { data, error, refresh } = await useFetch(apiUrl, {
+const { data, error, refresh } = await useFetch(apiUrl + '/users', {
   method: "GET",
   headers: {
     Authorization: "Bearer " + userStore.token,
@@ -64,7 +63,7 @@ const filterLibrarians = async () => {
 
 const attemptRemoveLibrarian = async () => {
   const { data: response } = await useFetch(
-    "http://localhost:8080/api/v1/users/" + currentlySelectedLibrarian.value,
+    apiUrl + '/users/' + currentlySelectedLibrarian.value,
     {
       method: "DELETE",
       headers: {

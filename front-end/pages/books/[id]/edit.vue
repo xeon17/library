@@ -16,6 +16,7 @@ useSeoMeta({
 import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
 const route = useRoute();
+const { apiUrl } = useRuntimeConfig().public;
 
 const alerts = reactive([]);
 const title = ref();
@@ -32,7 +33,7 @@ const releaseDate = ref();
 const summary = ref();
 
 const { data: book } = await useFetch(
-  "http://localhost:8080/api/v1/books/" + route.params.id,
+  apiUrl + '/books/' + route.params.id,
   {
     method: "GET",
     headers: {
@@ -58,7 +59,7 @@ if (book) {
 }
 
 const { data: categories } = await useFetch(
-  "http://localhost:8080/api/v1/categories/",
+    apiUrl + '/categories/',
   {
     method: "GET",
     headers: {
@@ -68,7 +69,7 @@ const { data: categories } = await useFetch(
 );
 
 const { data: genres } = await useFetch(
-  "http://localhost:8080/api/v1/genres/",
+    apiUrl + '/genres/',
   {
     method: "GET",
     headers: {
@@ -78,7 +79,7 @@ const { data: genres } = await useFetch(
 );
 
 const { data: publishers } = await useFetch(
-  "http://localhost:8080/api/v1/publishers/",
+    apiUrl + '/publishers/',
   {
     method: "GET",
     headers: {
@@ -88,7 +89,7 @@ const { data: publishers } = await useFetch(
 );
 
 const { data: letters } = await useFetch(
-  "http://localhost:8080/api/v1/letters/",
+    apiUrl + '/letters/',
   {
     method: "GET",
     headers: {
@@ -98,7 +99,7 @@ const { data: letters } = await useFetch(
 );
 
 const { data: languages } = await useFetch(
-  "http://localhost:8080/api/v1/languages/",
+    apiUrl + '/languages/',
   {
     method: "GET",
     headers: {
@@ -108,7 +109,7 @@ const { data: languages } = await useFetch(
 );
 
 const { data: formats } = await useFetch(
-  "http://localhost:8080/api/v1/formats/",
+    apiUrl + '/formats/',
   {
     method: "GET",
     headers: {
@@ -118,7 +119,7 @@ const { data: formats } = await useFetch(
 );
 
 const { data: authors } = await useFetch(
-  "http://localhost:8080/api/v1/authors/",
+    apiUrl + '/authors/',
   {
     method: "GET",
     headers: {
@@ -130,7 +131,7 @@ const { data: authors } = await useFetch(
 const submitForm = async () => {
   try {
     const { data, error } = await useFetch(
-      "http://localhost:8080/api/v1/books/" + route.params.id,
+      apiUrl + '/books/' + route.params.id,
       {
         method: "PATCH",
         headers: {
