@@ -45,7 +45,7 @@ const toggleRemoveMenu = (value, book) => {
 };
 
 const filterBooks = async () => {
-  const { data } = await useFetch(apiUrl, {
+  const { data } = await useFetch(apiUrl + '/books/', {
     method: "GET",
     headers: {
       Authorization: "Bearer " + userStore.token,
