@@ -16,7 +16,7 @@ useSeoMeta({
 
 <template>
   <div class="flex flex-col gap-y-6">
-    <Welcome></Welcome>
+    <welcome-page></welcome-page>
   </div>
 </template>
 

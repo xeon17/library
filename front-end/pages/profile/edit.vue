@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import EditProfileSchema from "~/schemas/EditProfileSchema";
+
 definePageMeta({
   middleware: "auth",
   layout: "default",
@@ -14,106 +16,84 @@ useSeoMeta({
 });
 
 import { useUserStore } from "~/stores/user";
+import { IUser } from "~/interfaces/IUser";
+import { type Input } from "valibot";
 
 const userStore = useUserStore();
 const { userId } = storeToRefs(userStore);
 const { apiUrl } = useRuntimeConfig().public;
+const loading = ref<boolean>(false);
 
-const { data: user } = await useFetch(apiUrl + '/users/me', {
-  method: "GET",
-  headers: {
-    Authorization: "Bearer " + userStore.token,
-  },
-  params: {
-    id: userId.value,
-  },
+const { data: user, status } = await useFetch<IUser>(
+  apiUrl + "/users/" + userId.value,
+  {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + userStore.token,
+    },
+  }
+);
+
+type EditProfileInput = Input<typeof EditProfileSchema>;
+const formState = ref<EditProfileInput>({
+  name: "",
+  email: "",
+  username: "",
+  gender: "",
+  birthDate: new Date(),
+  address: "",
+  city: "",
+  country: "",
+  photo: undefined,
 });
 
-const firstName = ref(user.value.firstName);
-const lastName = ref(user.value.lastName);
-const email = ref(user.value.email);
-const username = ref(user.value.username);
-const gender = ref(user.value.gender);
-const parsedDate = new Date(user.value.birthDate);
-const birthDate = ref(parsedDate.toISOString().split("T")[0]);
-const address = ref(user.value.address);
-const city = ref(user.value.city);
-const country = ref(user.value.country);
-const photo = ref();
-const alerts = reactive([]);
+if (user?.value && status.value === "success") {
+  formState.value = {
+    name: user.value.name,
+    email: user.value.email,
+    username: user.value.username,
+    gender: user.value.gender,
+    birthDate: new Date(user.value.birthDate),
+    address: user.value.address,
+    city: user.value.city,
+    country: user.value.country,
+    photo: undefined,
+  };
+}
 
-const onImageSubmit = async (event) => {
+const onImageSubmit = async (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (!target.files || !target.files[0]) return;
+
+  const photoFile = new File([target.files[0]], target.files[0].name); // Create a new File instance
+
   const formData = new FormData();
-  formData.append("photo", event.target.files[0]);
-  photo.value = event.target.files[0];
+  formData.append("photo", photoFile);
+  formState.value.photo = photoFile;
+
   try {
     await userStore.updatePhoto(formData);
-  } catch (error) {
-    showAlert("error", "Something went wrong", error.message);
+  } catch (error: any) {
+    console.log(error.message);
   }
 };
 
-const onFormSubmit = async () => {
+const handleSubmit = async (data: EditProfileInput) => {
   try {
-    await userStore.update({
-      firstName: firstName.value,
-      lastName: lastName.value,
-      email: email.value,
-      username: username.value,
-      gender: gender.value,
-      birthDate: birthDate.value,
-      address: address.value,
-      city: city.value,
-      country: country.value,
-    });
-  } catch (error) {
-    showAlert("error", "Something went wrong", error.message);
+    await userStore.update(data);
+  } catch (error: any) {
+    console.log(error.message);
   }
 };
-
-function showAlert(type, title, description) {
-  const newAlert = {
-    id: generateRandomId(),
-    type,
-    title,
-    description,
-    visible: true,
-  };
-
-  alerts.push(newAlert);
-
-  setTimeout(() => {
-    hideAlert(newAlert);
-  }, 5000);
-}
-
-function hideAlert(alert) {
-  alert.visible = false;
-  alerts.splice(alerts.indexOf(alert), 1);
-}
-
-function generateRandomId() {
-  const timestamp = Date.now().toString(36);
-  const randomNum = Math.random().toString(36).substr(2);
-  return timestamp + randomNum;
-}
 </script>
 
 <template>
   <div class="max-w-lg rounded-xl bg-white p-8 shadow-default">
-    <div class="absolute right-0 top-0 mr-2 mt-2">
-      <notification
-        v-for="alert in alerts"
-        :key="alert.id"
-        :alert-type="alert.type"
-        :title="alert.title"
-        :description="alert.description"
-        :visible="alert.visible"
-        @close="hideAlert(alert)"
-        class="mb-4"
-      ></notification>
-    </div>
-    <form @submit.prevent="onFormSubmit">
+    <base-form
+      @submit="handleSubmit"
+      :schema="EditProfileSchema"
+      :state="formState"
+    >
       <div class="space-y-12">
         <div class="border-b border-gray-900/10 pb-12">
           <h2 class="text-base font-semibold leading-7 text-gray-900">
@@ -124,42 +104,16 @@ function generateRandomId() {
           </p>
 
           <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div class="sm:col-span-3">
-              <label
-                for="firstName"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >First name</label
-              >
-              <div class="mt-2">
-                <input
-                  required
-                  v-model.trim="firstName"
-                  type="text"
-                  name="firstName"
-                  id="firstName"
-                  autocomplete="given-name"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div class="sm:col-span-3">
-              <label
-                for="lastName"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Last name</label
-              >
-              <div class="mt-2">
-                <input
-                  required
-                  v-model.trim="lastName"
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  autocomplete="family-name"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+            <div class="sm:col-span-6">
+              <base-input
+                id="name"
+                type="text"
+                v-model="formState.name"
+                :schema="EditProfileSchema.object.name"
+                label="Name"
+                icon="heroicons:user"
+                required
+              />
             </div>
             <div class="col-span-full">
               <label
@@ -198,41 +152,29 @@ function generateRandomId() {
             </div>
 
             <div class="sm:col-span-4">
-              <label
-                for="email"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Email address</label
-              >
-              <div class="mt-2">
-                <input
-                  required
-                  v-model.trim="email"
-                  id="email"
-                  name="email"
-                  type="email"
-                  autocomplete="email"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+              <base-input
+                id="email"
+                type="text"
+                v-model="formState.email"
+                :schema="EditProfileSchema.object.email"
+                label="Email"
+                autocomplete="on"
+                placeholder="example@example.com"
+                icon="heroicons:envelope"
+                required
+              />
             </div>
 
             <div class="sm:col-span-4">
-              <label
-                for="username"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Username</label
-              >
-              <div class="mt-2">
-                <input
-                  required
-                  v-model.trim="username"
-                  id="username"
-                  name="username"
-                  type="text"
-                  autocomplete="username"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+              <base-input
+                id="username"
+                type="text"
+                v-model="formState.username"
+                :schema="EditProfileSchema.object.username"
+                label="Username"
+                icon="heroicons:user"
+                required
+              />
             </div>
 
             <div class="sm:col-span-3">
@@ -242,18 +184,11 @@ function generateRandomId() {
                 >Gender</label
               >
               <div class="mt-2">
-                <select
-                  v-model="gender"
-                  id="gender"
-                  name="country"
-                  autocomplete="gender"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  <option disabled selected value="">Select gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
+                <USelectMenu
+                  v-model="formState.gender"
+                  placeholder="Select your gender"
+                  :options="['Male', 'Female', 'Other']"
+                />
               </div>
             </div>
 
@@ -265,7 +200,7 @@ function generateRandomId() {
               >
               <div class="mt-2">
                 <input
-                  v-model="birthDate"
+                  v-model="formState.birthDate"
                   type="date"
                   name="birthDate"
                   id="birthDate"
@@ -275,39 +210,23 @@ function generateRandomId() {
               </div>
             </div>
             <div class="col-span-full">
-              <label
-                for="street-address"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Street address</label
-              >
-              <div class="mt-2">
-                <input
-                  v-model.trim="address"
-                  type="text"
-                  name="street-address"
-                  id="street-address"
-                  autocomplete="street-address"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              <UFormGroup label="Address" name="address">
+                <UInput
+                  v-model.trim="formState.address"
+                  icon="i-heroicons-map-pin"
+                  class="block w-full rounded-md border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500"
                 />
-              </div>
+              </UFormGroup>
             </div>
 
-            <div class="sm:col-span-2 sm:col-start-1">
-              <label
-                for="city"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >City</label
-              >
-              <div class="mt-2">
-                <input
-                  v-model.trim="city"
-                  type="text"
-                  name="city"
-                  id="city"
-                  autocomplete="address-level2"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+            <div class="sm:col-span-3">
+              <base-input
+                id="city"
+                type="text"
+                v-model="formState.city"
+                :schema="EditProfileSchema.object.city"
+                label="City"
+              />
             </div>
 
             <div class="sm:col-span-3">
@@ -317,18 +236,11 @@ function generateRandomId() {
                 >Country</label
               >
               <div class="mt-2">
-                <select
-                  v-model="country"
-                  id="country"
-                  name="country"
-                  autocomplete="country"
-                  class="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                >
-                  <option disabled selected value="">
-                    Select your country
-                  </option>
-                  <option value="Montenegro">Montenegro</option>
-                </select>
+                <USelectMenu
+                  v-model="formState.country"
+                  placeholder="Select your country"
+                  :options="['Montenegro']"
+                />
               </div>
             </div>
           </div>
@@ -336,20 +248,27 @@ function generateRandomId() {
       </div>
 
       <div class="mt-6 flex items-center justify-end gap-x-6">
-        <button
-          type="button"
-          @click="navigateTo('/profile')"
-          class="text-sm font-semibold leading-6 text-gray-900"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          class="rounded-md bg-loginButton px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-loginHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          Save
-        </button>
+        <UButtonGroup size="sm">
+          <UButton
+            type="button"
+            color="gray"
+            variant="ghost"
+            @click="navigateTo('/profile')"
+            class="text-sm font-semibold leading-6 text-gray-900"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            type="submit"
+            color="blue"
+            :loading="loading"
+            :disabled="loading"
+            class="rounded-md text-sm font-semibold leading-6 text-white shadow-sm"
+          >
+            {{ loading ? "Loading..." : "Save" }}
+          </UButton>
+        </UButtonGroup>
       </div>
-    </form>
+    </base-form>
   </div>
 </template>

@@ -1,111 +1,126 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id                   String    @id @default(auto()) @map("_id") @db.ObjectId
-  firstName            String
-  lastName             String
+  id                   Int       @id @default(autoincrement())
+  name                 String
   email                String    @unique
-  role                 Role      @relation(fields: [roleId], references: [id])
-  roleId               String    @db.ObjectId
+  role                 Role      @default(STUDENT)
   password             String
-  passwordConfirm      String?
-  passwordChangedAt    DateTime?
-  passwordResetToken   String?
-  passwordResetExpires DateTime?
+  passwordConfirm      String?   @map("password_confirm")
+  passwordChangedAt    DateTime? @map("password_changed_at")
+  passwordResetToken   String?   @map("password_reset_token")
+  passwordResetExpires DateTime? @map("password_reset_expires")
   username             String    @unique
   photo                String?   @default("/default.png")
   gender               String?
-  birthDate            DateTime?
+  birthDate            DateTime? @map("birth_date")
   address              String?
   city                 String?
   country              String?
-  loginCount           Int?      @default(0)
-  createdAt            DateTime? @default(now())
-  updatedAt            DateTime? @updatedAt
+  loginCount           Int?      @default(0) @map("login_count")
+  createdAt            DateTime? @default(now()) @map("created_at")
+  updatedAt            DateTime? @updatedAt @map("updated_at")
   active               Boolean?  @default(true)
-  lastLogin            DateTime?
+  lastLogin            DateTime? @map("last_login")
+
+  @@map("users")
 }
 
-model Role {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
-  users User[]
+enum Role {
+  STUDENT
+  LIBRARIAN
+  ADMIN
 }
 
 model Category {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int    @id @default(autoincrement())
   name  String @unique
   books Book[]
+
+  @@map("categories")
 }
 
 model Letter {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int    @id @default(autoincrement())
   name  String @unique
   books Book[]
+
+  @@map("letters")
 }
 
 model Publisher {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int    @id @default(autoincrement())
   name  String @unique
   books Book[]
+
+  @@map("publishers")
 }
 
 model Author {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
-  bookIDs String[] @db.ObjectId
-  books   Book[]   @relation(fields: [bookIDs], references: [id])
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  biography String
+  photo     String?   @default("/default.png")
+  wikipedia String?
+  createdAt DateTime? @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  books Book[]
+
+  @@map("authors")
 }
 
 model Genre {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int    @id @default(autoincrement())
   name  String @unique
   books Book[]
+
+  @@map("genres")
 }
 
 model Language {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int    @id @default(autoincrement())
   name  String @unique
   books Book[]
+
+  @@map("languages")
 }
 
 model Format {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  id    Int    @id @default(autoincrement())
   name  String @unique
   books Book[]
+
+  @@map("formats")
 }
 
 model Book {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String    @unique
-  pageCount   Int
+  id          Int        @id @default(autoincrement())
+  title       String     @unique
+  pageCount   Int        @map("page_count")
   summary     String
-  category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  String    @db.ObjectId
-  isbn        String    @unique
-  authorIDs String[]   @db.ObjectId
-  authors  Author[] @relation(fields: [authorIDs], references: [id])
-  letter      Letter    @relation(fields: [letterId], references: [id])
-  letterId    String    @db.ObjectId
-  publisher   Publisher @relation(fields: [publisherId], references: [id])
-  publisherId String    @db.ObjectId
-  genre       Genre     @relation(fields: [genreId], references: [id])
-  genreId     String    @db.ObjectId
-  language    Language  @relation(fields: [languageId], references: [id])
-  languageId  String    @db.ObjectId
-  format      Format    @relation(fields: [formatId], references: [id])
-  formatId    String    @db.ObjectId
-  releaseDate DateTime
-  createdAt   DateTime? @default(now())
-  updatedAt   DateTime? @updatedAt
+  categories  Category[]
+  isbn        String     @unique
+  authors     Author[]
+  genres      Genre[]
+  letter      Letter     @relation(fields: [letterId], references: [id])
+  letterId    Int        @map("letter_id")
+  publisher   Publisher  @relation(fields: [publisherId], references: [id])
+  publisherId Int        @map("publisher_id")
+  language    Language   @relation(fields: [languageId], references: [id])
+  languageId  Int        @map("language_id")
+  format      Format     @relation(fields: [formatId], references: [id])
+  formatId    Int        @map("format_id")
+  releaseDate DateTime   @map("release_date")
+  createdAt   DateTime?  @default(now()) @map("created_at")
+  updatedAt   DateTime?  @updatedAt @map("updated_at")
+
+  @@map("books")
 }

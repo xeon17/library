@@ -1,26 +1,38 @@
-const BASE_URL = "http://localhost:8080/api/v1/users";
+const BASE_URL = "http://localhost:8080/api/v1/auth";
+
+interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+interface LoginPayload {
+  email: string;
+  password: string;
+  remember: boolean;
+}
+
+interface AccountPayLoad {
+  name: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  gender: string;
+  birthDate: Date;
+  address: string;
+  city: string;
+  country: string;
+}
 export const useUserStore = defineStore(
   "user",
   () => {
     // Define reactive state variables
-    const userId = ref<string | null>();
-    const token = ref<string | null>();
-    const role = ref<string | null>();
+    const userId = ref<number | null>(null);
+    const token = ref<string | null>(null);
+    const role = ref<string | null>(null);
 
-    const create = async (payload: {
-      firstName: string;
-      lastName: string;
-      password: string;
-      passwordConfirm: string;
-      email: string;
-      username: string;
-      gender: string;
-      birthDate: Date;
-      address: string;
-      city: string;
-      country: string;
-      role: string;
-    }) => {
+    const create = async (payload: AccountPayLoad) => {
       // Send a POST request to the createUser endpoint with user information
       const response = await fetch(BASE_URL, {
         method: "POST",
@@ -44,7 +56,7 @@ export const useUserStore = defineStore(
     };
 
     // Function for user login
-    const login = async (payload: { email: string; password: string }) => {
+    const login = async (payload: LoginPayload) => {
       // Send a POST request to the login endpoint with user credentials
       const response = await fetch(`${BASE_URL}/login`, {
         method: "POST",
@@ -59,9 +71,9 @@ export const useUserStore = defineStore(
       if (response.status === 401) {
         throw new Error("Email or password are incorrect");
       } else if (response.status === 200) {
-        // Update user state with the received user ID and token
-        setUser({ userId: data.userId, token: data.token });
-        role.value = data.role;
+        console.log(data.role);
+        // Update user state with the received user ID, token and role
+        setUser({ userId: data.id, token: data.token, role: data.role });
 
         // Navigate to the home page
         await navigateTo("/", {
@@ -71,14 +83,7 @@ export const useUserStore = defineStore(
     };
 
     // Function for user registration
-    const register = async (payload: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      passwordConfirm: string;
-      username: string;
-    }) => {
+    const register = async (payload: RegisterPayload) => {
       // Send a POST request to the signup endpoint with user information
       const response = await fetch(`${BASE_URL}/signup`, {
         method: "POST",
@@ -107,6 +112,7 @@ export const useUserStore = defineStore(
         setUser({
           userId: null,
           token: null,
+          role: null,
         });
 
         // Navigate to the login page
@@ -116,23 +122,8 @@ export const useUserStore = defineStore(
       }
     };
 
-    // Function to automatically log in the user based on stored token and userId
-    const autoLogin = () => {
-      const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId");
-
-      if (token && userId) {
-        setUser({
-          userId: userId,
-          token: token,
-        });
-        return true;
-      }
-    };
-
     const update = async (payload: {
-      firstName: string;
-      lastName: string;
+      name: string;
       email: string;
       username: string;
       gender: string;
@@ -140,6 +131,7 @@ export const useUserStore = defineStore(
       address: string;
       city: string;
       country: string;
+      photo: string;
     }) => {
       // Send a PATCH request to the updateMe endpoint with user information
       const response = await fetch(`${BASE_URL}/updateMe`, {
@@ -186,11 +178,13 @@ export const useUserStore = defineStore(
 
     // Function to set user state
     const setUser = (payload: {
-      userId: string | null;
+      userId: number | null;
       token: string | null;
+      role: string | null;
     }) => {
       userId.value = payload.userId;
       token.value = payload.token;
+      role.value = payload.role;
     };
 
     // Function to check if the user is authenticated
@@ -209,7 +203,6 @@ export const useUserStore = defineStore(
       logout,
       update,
       updatePhoto,
-      autoLogin,
       isAuthenticated,
     };
   },

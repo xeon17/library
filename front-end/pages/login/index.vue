@@ -5,10 +5,10 @@ definePageMeta({
 });
 useSeoMeta({
   lang: "en",
-  title: "Patient Portal - Login",
-  ogTitle: "Patient Portal - Login",
-  description: "Patient Portal App Login Page",
-  ogDescription: "Patient Portal App Login Page",
+  title: "Library - Login",
+  ogTitle: "Library - Login",
+  description: "Library Login Page",
+  ogDescription: "Library App Login Page",
   ogImage: "/logo.png",
 });
 useHead({
@@ -28,7 +28,7 @@ useHead({
       <nuxt-img alt="Login image" src="/loginImage.jpg" />
     </template>
     <template #content>
-      <Login></Login>
+      <login-form></login-form>
     </template>
   </NuxtLayout>
 </template>

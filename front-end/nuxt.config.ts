@@ -2,18 +2,15 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
-    "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxtjs/google-fonts",
     "nuxt-icon",
-    "nuxt-headlessui",
     "@nuxt/image",
+    "@vueuse/nuxt",
+    "nuxt-typed-router",
+    "@nuxthq/ui",
   ],
-  // Optionally change the default prefix.
-  headlessui: {
-    prefix: "Headless",
-  },
   tailwindcss: {
     configPath: "tailwind.config",
   },
@@ -23,11 +20,26 @@ export default defineNuxtConfig({
     },
   },
   pinia: {
-    autoImports: ["defineStore", "storeToRefs", ["defineStore", "definePiniaStore"]],
+    autoImports: [
+      "defineStore",
+      "storeToRefs",
+      ["defineStore", "definePiniaStore"],
+    ],
   },
   runtimeConfig: {
     public: {
-      apiUrl: 'http://localhost:8080/api/v1'
-    }
+      apiUrl: "http://localhost:8080/api/v1",
+    },
+  },
+  colorMode: {
+    preference: "light",
+  },
+  vite: {
+    vue: {
+      script: {
+        defineModel: true,
+        propsDestructure: true,
+      },
+    },
   },
 });

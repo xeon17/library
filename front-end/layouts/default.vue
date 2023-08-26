@@ -6,16 +6,14 @@
       <div class="grid grid-cols-12">
         <!-- Sidebar -->
         <div class="col-span-2 border-r">
-          <side-bar></side-bar>
+          <the-sidebar></the-sidebar>
         </div>
-
         <!-- Main Content -->
         <div class="col-span-10">
           <!-- Header -->
           <div class="border-b">
-            <nav-bar></nav-bar>
+            <the-navbar></the-navbar>
           </div>
-
           <!-- Content Area -->
           <main class="px-12 py-12 transition-all">
             <slot></slot>

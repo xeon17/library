@@ -1,26 +1,37 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
-const { userId } = storeToRefs(userStore);
+const { userId, token } = storeToRefs(userStore);
 const { apiUrl } = useRuntimeConfig().public;
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps<{
+  id: number;
+}>();
 
-const { data: user } = await useFetch(apiUrl + '/users/' + props.id, {
+interface User {
+  name: string;
+  email: string;
+  photo: string;
+  gender: string;
+  birthDate: string;
+  username: string;
+  address: string;
+  city: string;
+  country: string;
+  createdAt: string;
+}
+
+const { data: user } = await useFetch<User>("/users/" + props.id, {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
-    Authorization: "Bearer " + userStore.token,
+    Authorization: "Bearer " + token.value,
   },
 });
 </script>
 
 <template>
-  <div class="flex flex-row gap-x-4">
+  <div v-if="user" class="flex flex-row gap-x-4">
     <div
       class="flex flex-row items-center justify-center rounded-md bg-white px-16 py-16 shadow-default"
     >
@@ -34,7 +45,7 @@ const { data: user } = await useFetch(apiUrl + '/users/' + props.id, {
         </div>
         <div class="flex flex-col items-center">
           <p class="text-2xl font-bold">
-            {{ user.firstName }} {{ user.lastName }}
+            {{ user.name }}
           </p>
           <p class="text-sm text-gray-600 opacity-75">
             {{ user.email }}
@@ -68,7 +79,7 @@ const { data: user } = await useFetch(apiUrl + '/users/' + props.id, {
         </div>
         <div class="w-17 p-2">
           <p class="text-gray-500 opacity-75">Country:</p>
-          <p>{{ user.city || "Unknown" }}</p>
+          <p>{{ user.country || "Unknown" }}</p>
         </div>
         <div class="w-17 p-2">
           <p class="text-gray-500 opacity-75">Registered Date:</p>

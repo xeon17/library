@@ -1,10 +1,10 @@
 <script setup></script>
 
 <template>
-  <div class="container mx-auto rounded-lg sm:mx-44">
+  <div class="container mx-auto sm:my-20">
     <div class="flex flex-row items-center justify-center">
       <!-- Login image -->
-      <div class="sm:w-3/5">
+      <div class="sm:max-w-lg">
         <slot name="image"></slot>
       </div>
       <!-- Login or registration -->

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useUserStore } from "~/stores/user";
 
 definePageMeta({
@@ -17,22 +17,30 @@ useHead({
 
 const { apiUrl } = useRuntimeConfig().public;
 const userStore = useUserStore();
-const { userId, role } = storeToRefs(userStore);
 const route = useRoute();
+const bookId: number = route.params.id;
 
-const { data: book, error } = await useFetch(
-  apiUrl + '/books/' + route.params.id,
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+interface IBook {
+  id: string;
+  title: string;
+  categories: object[];
+  authors: object[];
+  genres: object[];
+  publisher: string;
+  summary: string;
+}
+
+const { data: book } = await useFetch<IBook>(apiUrl + "/books/" + bookId, {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 </script>
 
 <template>
   <div
+    v-if="book"
     class="flex max-w-3xl flex-col justify-around gap-y-4 rounded-md bg-white px-4 py-6 shadow-default"
   >
     <div class="flex justify-between border-b py-2">
@@ -52,13 +60,11 @@ const { data: book, error } = await useFetch(
       </div>
       <div class="w-17 p-2">
         <p class="text-gray-500 opacity-75">Category</p>
-        <p>
-          {{ book.category.name }}
-        </p>
+        <p>{{ book.categories.map((category) => category.name).join(", ") }}</p>
       </div>
       <div class="w-17 p-2">
         <p class="text-gray-500 opacity-75">Genre</p>
-        <p>{{ book.genre.name }}</p>
+        <p>{{ book.genres.map((genre) => genre.name).join(", ") }}</p>
       </div>
       <div class="w-17 p-2">
         <p class="text-gray-500 opacity-75">Language</p>

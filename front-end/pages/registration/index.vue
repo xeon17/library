@@ -28,7 +28,7 @@ useHead({
       <nuxt-img alt="Login image" src="/loginImage.jpg" />
     </template>
     <template #content>
-      <Registration></Registration>
+      <registration-form></registration-form>
     </template>
   </NuxtLayout>
 </template>

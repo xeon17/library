@@ -31,75 +31,54 @@ const isbn = ref();
 const releaseDate = ref();
 const summary = ref();
 
-const { data: categories } = await useFetch(
-  apiUrl + "/categories/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: categories } = await useFetch(apiUrl + "/categories/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
-const { data: genres } = await useFetch(
-    apiUrl + "/genres/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: genres } = await useFetch(apiUrl + "/genres/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
-const { data: publishers } = await useFetch(
-    apiUrl + "/publishers/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: publishers } = await useFetch(apiUrl + "/publishers/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
-const { data: letters } = await useFetch(
-    apiUrl + "/letters/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: letters } = await useFetch(apiUrl + "/letters/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
-const { data: languages } = await useFetch(
-    apiUrl + "/languages/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: languages } = await useFetch(apiUrl + "/languages/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
-const { data: formats } = await useFetch(
-    apiUrl + "/formats/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: formats } = await useFetch(apiUrl + "/formats/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
-const { data: authors } = await useFetch(
-    apiUrl + "/authors/",
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: authors } = await useFetch(apiUrl + "/authors/", {
+  method: "GET",
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
 const submitForm = async () => {
   try {
@@ -295,7 +274,7 @@ function generateRandomId() {
             <HeadlessListbox v-model="author" multiple>
               <div class="relative mt-1">
                 <HeadlessListboxButton
-                    class="relative w-full cursor-default rounded-lg border border-gray-200 bg-white px-3 py-4 text-sm text-left shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
+                  class="relative w-full cursor-default rounded-lg border border-gray-200 bg-white px-3 py-4 text-left text-sm shadow-sm focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
                 >
                   <span class="block truncate">
                     {{ author.map((author) => author.name).join(", ") }}</span
