@@ -71,7 +71,7 @@ const filteredRows = computed(() => {
   if (!search) {
     return usersArray;
   }
-  return usersArray.filter((user: User) => {
+  return usersArray.filter((user: Author) => {
     return Object.values(user).some((value) => {
       return String(value).toLowerCase().includes(search.toLowerCase());
     });
