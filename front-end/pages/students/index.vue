@@ -2,7 +2,7 @@
 import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
 const { token, role } = storeToRefs(userStore);
-const apiUrl = "http://localhost:8080/api/v1/users/";
+const {apiUrl} = useRuntimeConfig().public;
 const search = ref("");
 
 definePageMeta({
@@ -26,8 +26,9 @@ interface Student {
   lastLogin: string;
 }
 
-const { data: students } = await useFetch<Student>(apiUrl, {
+const { data: students } = await useFetch<Student>("/users/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + token.value,
   },

@@ -4,7 +4,7 @@ import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
 const { token, role } = storeToRefs(userStore);
 
-const apiUrl = "http://localhost:8080/api/v1/authors/";
+const { apiUrl } = useRuntimeConfig().public;
 const search = ref("");
 
 definePageMeta({
@@ -26,8 +26,9 @@ interface Author {
   description: string;
 }
 
-const { data: authors } = await useFetch<Author>(apiUrl, {
+const { data: authors } = await useFetch<Author[]>("/authors", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + token.value,
   },

@@ -30,8 +30,9 @@ interface IBook {
   summary: string;
 }
 
-const { data: book } = await useFetch<IBook>(apiUrl + "/books/" + bookId, {
+const { data: book } = await useFetch<IBook>("/books/" + bookId, {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },

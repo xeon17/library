@@ -4,7 +4,7 @@ import { useUserStore } from "~/stores/user";
 const userStore = useUserStore();
 const { token, role } = storeToRefs(userStore);
 
-const apiUrl = "http://localhost:8080/api/v1/books/";
+const { apiUrl } = useRuntimeConfig().public;
 const search = ref("");
 
 definePageMeta({
@@ -33,8 +33,9 @@ const {
   data: books,
   error,
   refresh,
-} = await useFetch<IBook>(apiUrl, {
+} = await useFetch<IBook>("/books/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + token.value,
   },

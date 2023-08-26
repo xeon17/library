@@ -24,15 +24,13 @@ const { userId } = storeToRefs(userStore);
 const { apiUrl } = useRuntimeConfig().public;
 const loading = ref<boolean>(false);
 
-const { data: user, status } = await useFetch<IUser>(
-  apiUrl + "/users/" + userId.value,
-  {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + userStore.token,
-    },
-  }
-);
+const { data: user, status } = await useFetch<IUser>("/users/" + userId.value, {
+  method: "GET",
+  baseURL: apiUrl,
+  headers: {
+    Authorization: "Bearer " + userStore.token,
+  },
+});
 
 type EditProfileInput = Input<typeof EditProfileSchema>;
 const formState = ref<EditProfileInput>({

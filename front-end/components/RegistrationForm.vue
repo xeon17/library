@@ -112,18 +112,16 @@
                 />
               </div>
             </div>
-            <div>
-              <div class="relative">
-                <base-input
-                  id="username"
-                  type="text"
-                  v-model="formState.username"
-                  :schema="RegistrationSchema.object.username"
-                  label="Username"
-                  icon="heroicons:user"
-                  required
-                />
-              </div>
+            <div class="relative">
+              <base-input
+                id="username"
+                type="text"
+                v-model="formState.username"
+                :schema="RegistrationSchema.object.username"
+                label="Username"
+                icon="heroicons:user"
+                required
+              />
             </div>
             <div class="relative">
               <base-checkbox
@@ -168,43 +166,15 @@ const formState = ref<RegistrationInput>({
 
 const userStore = useUserStore();
 const loading = ref<boolean>(false);
-const alerts = reactive([]);
 
 async function handleSubmit(data: RegistrationInput) {
   try {
     loading.value = true;
     await userStore.register(data);
   } catch (error: any) {
-    showAlert("error", "Error", error.message);
+    console.log(error.message);
   } finally {
     loading.value = false;
   }
-}
-
-function showAlert(type: string, title: string, description: string) {
-  const newAlert = {
-    id: generateRandomId(),
-    type,
-    title,
-    description,
-    visible: true,
-  };
-
-  alerts.push(newAlert);
-
-  setTimeout(() => {
-    hideAlert(newAlert);
-  }, 5000);
-}
-
-function hideAlert(alert) {
-  alert.visible = false;
-  alerts.splice(alerts.indexOf(alert), 1);
-}
-
-function generateRandomId() {
-  const timestamp = Date.now().toString(36);
-  const randomNum = Math.random().toString(36).substr(2);
-  return timestamp + randomNum;
 }
 </script>

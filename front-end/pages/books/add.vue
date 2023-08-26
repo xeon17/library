@@ -31,50 +31,57 @@ const isbn = ref();
 const releaseDate = ref();
 const summary = ref();
 
-const { data: categories } = await useFetch(apiUrl + "/categories/", {
+const { data: categories } = await useFetch("/categories/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
 });
 
-const { data: genres } = await useFetch(apiUrl + "/genres/", {
+const { data: genres } = await useFetch("/genres/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
 });
 
-const { data: publishers } = await useFetch(apiUrl + "/publishers/", {
+const { data: publishers } = await useFetch("/publishers/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
 });
 
-const { data: letters } = await useFetch(apiUrl + "/letters/", {
+const { data: letters } = await useFetch("/letters/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
 });
 
-const { data: languages } = await useFetch(apiUrl + "/languages/", {
+const { data: languages } = await useFetch("/languages/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
 });
 
-const { data: formats } = await useFetch(apiUrl + "/formats/", {
+const { data: formats } = await useFetch("/formats/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
 });
 
-const { data: authors } = await useFetch(apiUrl + "/authors/", {
+const { data: authors } = await useFetch("/authors/", {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
@@ -82,8 +89,9 @@ const { data: authors } = await useFetch(apiUrl + "/authors/", {
 
 const submitForm = async () => {
   try {
-    const { data } = await useFetch(apiUrl + "/books/", {
+    const { data } = await useFetch("/books/", {
       method: "POST",
+      baseURL: apiUrl,
       headers: {
         Authorization: "Bearer " + userStore.token,
       },

@@ -35,8 +35,9 @@ const isbn = ref();
 const releaseDate = ref();
 const summary = ref();
 
-const {data: book} = await useFetch(apiUrl + "/books/" + route.params.id, {
+const {data: book} = await useFetch("/books/" + route.params.id, {
   method: "GET",
+  baseURL: apiUrl,
   headers: {
     Authorization: "Bearer " + userStore.token,
   },
